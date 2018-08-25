@@ -17,23 +17,28 @@ $( document ).ready(function() {
         } else {
             tweetText = tweet.full_text;
         }
-        var url;
-        var tweetUrlRemoved;
+        var urls;
+        var tweetUrlRemoved = tweetText
         var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
         var regex = new RegExp(expression);
-        url = tweetText.match(regex);
-        if (url) {
-            tweetUrlRemoved = tweetText.replace(url[0],'');
-            tweetUrlRemoved = tweetUrlRemoved+' <a href="'+url[0]+'">'+url[0]+'</a>';
-        } else {
-            tweetUrlRemoved = tweetText;
+        urls = tweetText.match(regex);
+        console.log(urls);
+        if (urls) {
+            $.each(urls, function( i, url ) {
+                console.log(i+' '+url);
+                tweetUrlRemoved = tweetUrlRemoved.replace(url,'');
+                if ( (i+1) == urls.length ) {
+                    $.each(urls, function( i, url ) {
+                        tweetUrlRemoved = tweetUrlRemoved+' <a href="'+url+'">'+url+'</a>';
+                    });
+                }
+            });
         }
         console.log(tweetUrlRemoved);
         $( "p" ).fadeOut( "fast", function() {
             $(".user").html('<a href="https://twitter.com/'+tweet.user.screen_name+'">@'+tweet.user.screen_name+'</a>');
             $(".tweet").html(tweetUrlRemoved);
             $("p").fadeIn( "fast", function() {
-                console.log(i+1+" "+tweetCount);
                 if ( (i+1) == tweetCount ) {
                     //fetchTweets();
                     console.log("Fetch more Tweets.");
