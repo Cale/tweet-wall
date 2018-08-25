@@ -13,7 +13,7 @@ if (isset($_GET["since_id"])) {
 $connection = new TwitterOAuth($consumer_key, $consumer_secret, $access_token, $access_token_secret);
 $content = $connection->get("account/verify_credentials");
 
-$statuses = $connection->get("statuses/home_timeline", ["include_entities" => false, "exclude_replies" => false, "since_id" => $sinceId]);
+$statuses = $connection->get("statuses/home_timeline", ["include_entities" => false, "exclude_replies" => false, "since_id" => $sinceId, "tweet_mode" => "extended"]);
 
 echo json_encode($statuses);
 

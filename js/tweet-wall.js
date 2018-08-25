@@ -11,13 +11,31 @@ $( document ).ready(function() {
 
     function displayTweet(tweet, i, tweetCount) {
         console.log(tweet);
+        var tweetText;
+        if (tweet.retweeted_status) {
+            tweetText = tweet.retweeted_status.full_text;
+        } else {
+            tweetText = tweet.full_text;
+        }
+        var url;
+        var tweetUrlRemoved;
+        var expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+        var regex = new RegExp(expression);
+        url = tweetText.match(regex);
+        if (url) {
+            tweetUrlRemoved = tweetText.replace(url[0],'');
+            tweetUrlRemoved = tweetUrlRemoved+' <a href="'+url[0]+'">'+url[0]+'</a>';
+        } else {
+            tweetUrlRemoved = tweetText;
+        }
+        console.log(tweetUrlRemoved);
         $( "p" ).fadeOut( "fast", function() {
-            $(".user").text(tweet.user.screen_name);
-            $(".tweet").text(tweet.text);
+            $(".user").html('<a href="https://twitter.com/'+tweet.user.screen_name+'">@'+tweet.user.screen_name+'</a>');
+            $(".tweet").html(tweetUrlRemoved);
             $("p").fadeIn( "fast", function() {
                 console.log(i+1+" "+tweetCount);
                 if ( (i+1) == tweetCount ) {
-                    fetchTweets();
+                    //fetchTweets();
                     console.log("Fetch more Tweets.");
                 }
             });
@@ -34,7 +52,7 @@ $( document ).ready(function() {
     }
 
     function fetchTweets() {
-        $.getJSON( "../json/tweets.php?since_id="+since_id, function( tweets ) {
+        $.getJSON( "/json/tweets.php?since_id="+since_id, function( tweets ) {
             console.log("Fetched "+tweets.length+" Tweets.")
             if ( tweets.length > 0) {
                 since_id = tweets[0].id_str;
