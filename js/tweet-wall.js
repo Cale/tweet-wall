@@ -1,7 +1,13 @@
 $( document ).ready(function() {
     var url = new URL(window.location.href);
-    var interval = url.searchParams.get("interval"); // Time interval between fetching new Tweets.
+    var interval = ""; // Time interval between fetching new Tweets.
     var since_id = "1033098018441052161";
+
+    if (url.searchParams.get("interval")) {
+        interval = url.searchParams.get("interval");
+    } else {
+        interval = 60000;
+    }
 
     function displayTweet(tweet, i, tweetCount) {
         console.log(tweet);
