@@ -59,7 +59,7 @@ $( document ).ready(function() {
             $(".tweet").html(tweetUrlRemoved);
             $("p").fadeIn( "fast", function() {
                 if ( (i+1) == tweetCount ) {
-                    //fetchTweets();
+                    fetchTweets();
                     console.log("Fetch more Tweets.");
                 }
             });
