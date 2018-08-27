@@ -1,0 +1,17 @@
+body {
+    background-color: #eee;
+}
+
+p {
+    color: #444;
+    display: block;
+    font-family: 'Source Sans Pro', 'Helvetica', sans-serif;
+    font-size: 4vw;
+    line-height: 5.5vw;
+    margin: 0;
+    padding: 30px 40px;
+}
+
+a {
+    color: #00a09e;
+}
