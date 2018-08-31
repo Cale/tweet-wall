@@ -10,7 +10,7 @@ $( document ).ready(function() {
     }
 
     function displayTweet(tweet, i, tweetCount) {
-        console.log(tweet);
+        //console.log(tweet);
         var tweetText;
         if (tweet.retweeted_status) {
             tweetText = tweet.retweeted_status.full_text;
@@ -32,13 +32,13 @@ $( document ).ready(function() {
         hashtags = tweetText.match(hashtagRegex);
         if (urls) {
             $.each(urls, function( i, url ) {
-                console.log(i+' '+url);
+                //console.log(i+' '+url);
                 tweetUrlRemoved = tweetUrlRemoved.replace(url,'<a href="'+url+'" target="_blank">'+url+'</a>');
             });
         }
         if (users) {
             $.each(users, function( i, user ) {
-                console.log(i+' '+user);
+                //console.log(i+' '+user);
                 nospace = user.trim();
                 noat = nospace.replace("@",'');
                 noat = nospace.replace(".",'');
@@ -47,7 +47,7 @@ $( document ).ready(function() {
         }
         if (hashtags) {
             $.each(hashtags, function( i, tag ) {
-                console.log(i+' '+tag);
+                //console.log(i+' '+tag);
                 nospace = tag.trim();
                 nohash = nospace.replace("#",'');
                 tweetUrlRemoved = tweetUrlRemoved.replace(tag,' <a href="https://twitter.com/hashtag/'+nohash+'?src=hash" target="_blank">'+nospace+'</a>');
@@ -60,14 +60,13 @@ $( document ).ready(function() {
             $("p").fadeIn( "fast", function() {
                 if ( (i+1) == tweetCount ) {
                     fetchTweets();
-                    console.log("Fetch more Tweets.");
+                    console.log("Fetching more Tweets...");
                 }
             });
         });
     }
 
     function rotateTweets(tweets) {
-        console.log(interval / tweets.length);
         tweetCount = tweets.length;
         tweetInterval = interval / tweetCount;
         $.each(tweets, function( i, tweet ) {
@@ -76,17 +75,25 @@ $( document ).ready(function() {
     }
 
     function fetchTweets() {
-        $.getJSON( "/json/tweets.php?since_id="+since_id, function( tweets ) {
+        $.getJSON( "../json/tweets.php?since_id="+since_id, function( tweets ) {
             console.log("Fetched "+tweets.length+" Tweets.")
-            if ( tweets.length > 0) {
-                since_id = tweets[0].id_str;
-                console.log("id: "+since_id);
-                rotateTweets(tweets.reverse());
-            } else {
-                console.log("No Tweets. Waiting...");
+        })
+            .done(function( tweets ) {
+                if ( tweets.length > 0) {
+                    console.log("Process Tweets.");
+                    since_id = tweets[0].id_str;
+                    console.log("id: "+since_id);
+                    rotateTweets(tweets.reverse());
+                } else {
+                    console.log("No Tweets. Waiting "+interval+"ms...");
+                    setTimeout(function() { fetchTweets(); }, interval );
+                }
+            })
+            .fail(function() {
+                console.log("Error fetching Tweets.");
+                console.log("No Tweets. Waiting "+interval+"ms...");
                 setTimeout(function() { fetchTweets(); }, interval );
-            }
-        });
+            });
     }
 
     fetchTweets();
