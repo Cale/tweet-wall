@@ -1,17 +1,30 @@
 body {
-    background-color: #eee;
+    background-color: #222;
+    margin: 0;
+    padding: 0;
 }
 
 p {
-    color: #444;
-    display: block;
+    color: #ccc;
     font-family: 'Source Sans Pro', 'Helvetica', sans-serif;
-    font-size: 4vw;
-    line-height: 5.5vw;
+    font-size: 5vw;
+    line-height: 6vw;
     margin: 0;
-    padding: 30px 40px;
+    padding: 0 8vw;
+    height: 100vh;
+    overflow: hidden;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 a {
-    color: #00a09e;
+    color: #eee;
+}
+
+.user {
+    background-color: yellow;
+}
+
+.user a {
+    color: #222;
 }
